@@ -7,6 +7,9 @@
     ></script>
 
     <script src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
+
+    <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="editor.css" />
     <title>Code editor</title>
   </head>
 
@@ -22,14 +25,21 @@
     "
   >
     <div id="loadingScreen" x-show="pyodide == null">
-      Initializing Python...
+      <div id="modal">Loading Python...</div>
     </div>
 
-    <div id="wrapper" x-show="pyodide != null">
-      <textarea x-model="editorContent" placeholder="Enter your code here">
+    <div id="wrapper">
+      <h1>Editor</h1>
+      <textarea
+        @keydown.tab.prevent="editorContent += '    '"
+        id="editor"
+        x-model="editorContent"
+        placeholder="Enter your code here"
+      >
       </textarea>
 
       <button
+        id="runButton"
         @click="
         outputLines = []
 
@@ -48,7 +58,8 @@
         Run
       </button>
 
-      <div>
+      <h1>Output</h1>
+      <div id="output">
         <template x-for="(line, index) in outputLines" :key="index">
           <div x-text="line" style="height: 1rem; white-space: pre"></div>
         </template>
