@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
+    <title>Code editor</title>
+  </head>
+
+  <body
+    x-data="{
+    editorContent: '',
+    outputLines: [],
+    pyodide: null
+  }"
+    x-init="
+    pyodide = await loadPyodide(); 
+    pyodide.setStdout({ batched: (msg) => (outputLines.push(msg)) });
+    "
+  >
+    <div id="loadingScreen" x-show="pyodide == null">
+      Initializing Python...
+    </div>
+
+    <div id="wrapper" x-show="pyodide != null">
+      <textarea x-model="editorContent" placeholder="Enter your code here">
+      </textarea>
+
+      <button
+        @click="
+        outputLines = []
+
+        try {
+          pyodide.runPython(editorContent)
+        } catch (error) {
+          for (line of error.message.split('\n')) {
+            console.log(line)
+            outputLines.push(line)
+          } 
+        }
+
+        console.log(outputLines)
+      "
+      >
+        Run
+      </button>
+
+      <div>
+        <template x-for="(line, index) in outputLines" :key="index">
+          <div x-text="line" style="height: 1rem; white-space: pre"></div>
+        </template>
+      </div>
+    </div>
+  </body>
+</html>
