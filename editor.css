@@ -21,7 +21,28 @@
 }
 
 #wrapper {
-  width: auto;
+  display: flex;
+}
+
+#directions {
+  padding: 5px;
+  width: 400px;
+  overflow-y: scroll;
+  height: 100vh;
+  border-left-style: solid;
+  border-width: 1px;
+}
+
+.testcaseWrapper {
+  padding: 8px;
+  margin-top: 8px;
+  border-style: solid;
+  border-radius: 15px;
+  border-width: 1px;
+}
+
+#editorWrapper {
+  flex-grow: 1;
   height: 100vh;
   box-sizing: border-box;
   padding: 8px;
@@ -40,11 +61,20 @@
 }
 
 #runButton {
-  width: 5rem;
   background-color: #82e076;
   font-size: 2rem;
   height: 3rem;
   border: none;
+  border-radius: 10px;
+}
+
+#gradeButton {
+  margin-left: 15px;
+  background-color: #110ed1;
+  font-size: 2rem;
+  height: 3rem;
+  border: none;
+  color: white;
   border-radius: 10px;
 }
 

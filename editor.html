@@ -29,18 +29,20 @@
     </div>
 
     <div id="wrapper">
-      <h1>Editor</h1>
-      <textarea
-        @keydown.tab.prevent="editorContent += '    '"
-        id="editor"
-        x-model="editorContent"
-        placeholder="Enter your code here"
-      >
-      </textarea>
+      <div id="editorWrapper">
+        <h1>Editor</h1>
+        <textarea
+          @keydown.tab.prevent="editorContent += '    '"
+          id="editor"
+          x-model="editorContent"
+          placeholder="Enter your code here"
+        >
+        </textarea>
 
-      <button
-        id="runButton"
-        @click="
+        <div id="buttonWrapper">
+          <button
+            id="runButton"
+            @click="
         outputLines = []
 
         try {
@@ -54,15 +56,40 @@
 
         console.log(outputLines)
       "
-      >
-        Run
-      </button>
+          >
+            Run
+          </button>
+          <button id="gradeButton">Submit to Grader</button>
+        </div>
 
-      <h1>Output</h1>
-      <div id="output">
-        <template x-for="(line, index) in outputLines" :key="index">
-          <div x-text="line" style="height: 1rem; white-space: pre"></div>
-        </template>
+        <h1>Output</h1>
+        <div id="output">
+          <template x-for="(line, index) in outputLines" :key="index">
+            <div x-text="line" style="height: 1rem; white-space: pre"></div>
+          </template>
+        </div>
+      </div>
+
+      <div id="directions">
+        <h1>Directions</h1>
+
+        <p>Write fibonachi.</p>
+
+        <h1>Test cases</h1>
+
+        <div class="testcaseWrapper">
+          <h2>Input</h2>
+          <code>15</code>
+          <h2>Output</h2>
+          <code>1<br />2<br />3<br />4<br />5</code>
+        </div>
+
+        <div class="testcaseWrapper">
+          <h2>Input</h2>
+          <code>15</code>
+          <h2>Output</h2>
+          <code>1<br />2<br />3<br />4<br />5</code>
+        </div>
       </div>
     </div>
   </body>
