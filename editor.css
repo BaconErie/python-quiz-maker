@@ -42,8 +42,7 @@
 }
 
 #editorWrapper {
-  flex-grow: 1;
-  height: 100vh;
+  width: calc(100vw - 400px);
   box-sizing: border-box;
   padding: 8px;
   display: flex;
@@ -60,6 +59,12 @@
   border-radius: 10px;
 }
 
+#buttonWrapper {
+  display: flex;
+  gap: 5px;
+  justify-content: space-between;
+}
+
 #runButton {
   background-color: #82e076;
   font-size: 2rem;
@@ -68,8 +73,14 @@
   border-radius: 10px;
 }
 
+#name {
+  border-radius: 10px;
+  font-size: 2rem;
+  width: 10rem;
+  height: 3rem;
+}
+
 #gradeButton {
-  margin-left: 15px;
   background-color: #110ed1;
   font-size: 2rem;
   height: 3rem;

@@ -15,9 +15,16 @@
 
   <body
     x-data="{
+    name: '',
     editorContent: '',
     outputLines: [],
-    pyodide: null
+    pyodide: null,
+    isGrading: false,
+    testCases: [
+      {input: '1\n2\n3\n4', expectedOutput: '1\n2\n3\n4', actualOutput: '1\n2\n3\n4', pass: true},
+      {input: '1\n2\n32jk32jk32jrkjnk32thi32toi32u932u93\n4', expectedOutput: '1\n2\n\n\n\n\n\n\n\n3\n4', actualOutput: '1\n2\n3\n4', pass: false},
+      {input: '1\n2\n3\n4', expectedOutput: '1\n2\n3\n4', actualOutput: '1\n2\n3\n4', pass: true},
+    ] 
   }"
     x-init="
     pyodide = await loadPyodide(); 
@@ -53,13 +60,22 @@
             outputLines.push(line)
           } 
         }
-
-        console.log(outputLines)
       "
           >
             Run
           </button>
-          <button id="gradeButton">Submit to Grader</button>
+
+          <div>
+            <input id="name" type="text" placeholder="Name" x-model="name" />
+            <button
+              id="gradeButton"
+              @click="
+              document.getElementById('results').scrollIntoView({ behavior: 'smooth'})
+              isGrading = true"
+            >
+              Submit to Grader
+            </button>
+          </div>
         </div>
 
         <h1>Output</h1>
@@ -90,6 +106,65 @@
           <h2>Output</h2>
           <code>1<br />2<br />3<br />4<br />5</code>
         </div>
+
+        <div class="testcaseWrapper">
+          <h2>Input</h2>
+          <code>15</code>
+          <h2>Output</h2>
+          <code>1<br />2<br />3<br />4<br />5</code>
+        </div>
+
+        <div class="testcaseWrapper">
+          <h2>Input</h2>
+          <code>15</code>
+          <h2>Output</h2>
+          <code>1<br />2<br />3<br />4<br />5</code>
+        </div>
+
+        <div class="testcaseWrapper">
+          <h2>Input</h2>
+          <code>15</code>
+          <h2>Output</h2>
+          <code>1<br />2<br />3<br />4<br />5</code>
+        </div>
+
+        <h1 id="results">Last submission results</h1>
+
+        <p style="text-align: center" x-show="!isGrading">
+          No submission made yet.
+        </p>
+        <p style="text-align: center" x-show="isGrading">Grading...</p>
+        <template x-for="(testCase, caseIndex) in testCases" :key="caseIndex">
+          <div class="testcaseWrapper" x-show="!isGrading">
+            <h2>Input</h2>
+            <template
+              x-for="(line, index) in testCase.input.split('\n')"
+              :key="index"
+            >
+              <code x-text="line" style="display: block; height: 1rem"></code>
+            </template>
+
+            <h2>Expected Output</h2>
+            <template
+              x-for="(line, index) in testCase.expectedOutput.split('\n')"
+              :key="index"
+            >
+              <code x-text="line" style="display: block; height: 1rem"></code>
+            </template>
+            <h2>Actual Output</h2>
+            <template
+              x-for="(line, index) in testCase.actualOutput.split('\n')"
+              :key="index"
+            >
+              <code x-text="line" style="display: block; height: 1rem"></code>
+            </template>
+            <p>
+              Test result:
+              <span x-show="!testCase.pass" style="color: red">Fail</span>
+              <span x-show="testCase.pass" style="color: green">Pass</span>
+            </p>
+          </div>
+        </template>
       </div>
     </div>
   </body>
