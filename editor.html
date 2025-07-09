@@ -17,18 +17,28 @@
     x-data="{
     name: '',
     editorContent: '',
-    outputLines: [],
+    outputLines: [''],
     pyodide: null,
     isGrading: false,
     testCases: [
       {input: '1\n2\n3\n4', expectedOutput: '1\n2\n3\n4', actualOutput: '1\n2\n3\n4', pass: true},
       {input: '1\n2\n32jk32jk32jrkjnk32thi32toi32u932u93\n4', expectedOutput: '1\n2\n\n\n\n\n\n\n\n3\n4', actualOutput: '1\n2\n3\n4', pass: false},
       {input: '1\n2\n3\n4', expectedOutput: '1\n2\n3\n4', actualOutput: '1\n2\n3\n4', pass: true},
-    ] 
+    ],
+
+    output(str) {
+      for (const char of str) {
+        if (char != '\n') {
+          this.outputLines[this.outputLines.length-1] += char
+        } else {
+          this.outputLines.push([''])
+        }
+      }
+    }
   }"
     x-init="
     pyodide = await loadPyodide(); 
-    pyodide.setStdout({ batched: (msg) => (outputLines.push(msg)) });
+    pyodide.setStdout({ batched: (msg) => (output(msg+'\n'))});
     "
   >
     <div id="loadingScreen" x-show="pyodide == null">
@@ -50,15 +60,12 @@
           <button
             id="runButton"
             @click="
-        outputLines = []
+        outputLines = ['']
 
         try {
-          pyodide.runPython(editorContent)
+          pyodide.runPython(editorContent + '\nimport sys\nsys.stdout.flush()\nimport os\nos.fsync(sys.stdout.fileno())')
         } catch (error) {
-          for (line of error.message.split('\n')) {
-            console.log(line)
-            outputLines.push(line)
-          } 
+          output(error.message)
         }
       "
           >
