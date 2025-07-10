@@ -143,46 +143,33 @@
       </div>
 
       <div id="directions">
+        <h2>{{assignment_name}}</h2>
         <h1>Directions</h1>
 
-        <p>Write fibonachi.</p>
+        <p>{{directions}}</p>
 
         <h1>Test cases</h1>
 
+        {% if test_case_list %} {% for test_case in test_case_list %}
         <div class="testcaseWrapper">
           <h2>Input</h2>
-          <code>15</code>
+          <code>
+            {% set list1 = test_case['input'].split('\n') %} {% for item in
+            list1 %} {{ item }} {% if not loop.last %}
+            <br />
+            {% endif %} {% endfor %}
+          </code>
           <h2>Output</h2>
-          <code>1<br />2<br />3<br />4<br />5</code>
+          <code
+            >{% set list2 = test_case['output'].split('\n') %} {% for item in
+            list2 %} {{ item }} {% if not loop.last %}
+            <br />
+            {% endif %} {% endfor %}</code
+          >
         </div>
-
-        <div class="testcaseWrapper">
-          <h2>Input</h2>
-          <code>15</code>
-          <h2>Output</h2>
-          <code>1<br />2<br />3<br />4<br />5</code>
-        </div>
-
-        <div class="testcaseWrapper">
-          <h2>Input</h2>
-          <code>15</code>
-          <h2>Output</h2>
-          <code>1<br />2<br />3<br />4<br />5</code>
-        </div>
-
-        <div class="testcaseWrapper">
-          <h2>Input</h2>
-          <code>15</code>
-          <h2>Output</h2>
-          <code>1<br />2<br />3<br />4<br />5</code>
-        </div>
-
-        <div class="testcaseWrapper">
-          <h2>Input</h2>
-          <code>15</code>
-          <h2>Output</h2>
-          <code>1<br />2<br />3<br />4<br />5</code>
-        </div>
+        {% endfor %} {% else %}
+        <p style="text-align: center">No test cases have been provided.</p>
+        {% endif %}
 
         <h1 id="results">Last submission results</h1>
 
