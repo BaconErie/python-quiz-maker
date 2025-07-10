@@ -37,8 +37,15 @@
     }
   }"
     x-init="
+    let decoder = new TextDecoder();
     pyodide = await loadPyodide(); 
-    pyodide.setStdout({ batched: (msg) => (output(msg+'\n'))});
+    pyodide.setStdout({ 
+      write(buf) {
+        const written_string = decoder.decode(buf);
+        output(written_string)
+        return buf.length;
+      }
+    });
     "
   >
     <div id="loadingScreen" x-show="pyodide == null">
