@@ -17,6 +17,9 @@
     x-data="{
     name: '',
     editorContent: '',
+    input: '',
+    inputBuffer: [],
+    inputPosition: 0,
     outputLines: [''],
     pyodide: null,
     isGrading: false,
@@ -39,13 +42,30 @@
     x-init="
     let decoder = new TextDecoder();
     pyodide = await loadPyodide(); 
+
     pyodide.setStdout({ 
       write(buf) {
-        const written_string = decoder.decode(buf);
-        output(written_string)
+        const writtenString = decoder.decode(buf);
+        
+        output(writtenString)
+
         return buf.length;
       }
     });
+
+    pyodide.setStdin({stdin: () => {
+      if (inputPosition >= inputBuffer.length) {
+        output('<WARNING: Not enough input data for the program. Giving the program a blank string instead.>'+'\n')
+        return ''
+      } 
+
+      result = inputBuffer[inputPosition]
+      inputPosition += 1
+
+      output(result + '\n')
+      
+      return result
+    }})
     "
   >
     <div id="loadingScreen" x-show="pyodide == null">
@@ -70,6 +90,15 @@
         outputLines = ['']
 
         try {
+
+          if (input != '') {
+            inputBuffer = input.split('\n')
+          } else {
+            inputBuffer = []
+          }
+
+          inputPosition = 0
+          console.warn(inputBuffer)
           pyodide.runPython(editorContent + '\nimport sys\nsys.stdout.flush()\nimport os\nos.fsync(sys.stdout.fileno())')
         } catch (error) {
           output(error.message)
@@ -92,11 +121,24 @@
           </div>
         </div>
 
-        <h1>Output</h1>
-        <div id="output">
-          <template x-for="(line, index) in outputLines" :key="index">
-            <div x-text="line" style="height: 1rem; white-space: pre"></div>
-          </template>
+        <div id="inputOutputWrapper">
+          <div id="inputWrapper">
+            <h1>Input</h1>
+            <textarea
+              id="input"
+              x-model="input"
+              placeholder="Enter input here"
+            ></textarea>
+          </div>
+
+          <div id="outputWrapper">
+            <h1>Output</h1>
+            <div id="output">
+              <template x-for="(line, index) in outputLines" :key="index">
+                <div x-text="line" style="height: 1rem; white-space: pre"></div>
+              </template>
+            </div>
+          </div>
         </div>
       </div>
 
