@@ -34,7 +34,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS submissions (
                id INTEGER PRIMARY KEY AUTOINCREMENT,
                time TEXT,
                student_name INTEGER,
-               exercise_id INTEGER,
+               assignment_id INTEGER,
                submission_body TEXT
                )''')
 conn.commit()
