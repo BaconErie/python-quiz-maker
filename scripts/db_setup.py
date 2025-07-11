@@ -3,30 +3,29 @@ import sqlite3
 conn = sqlite3.connect('db.sqlite3')
 cursor = conn.cursor()
 
-cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+cursor.execute('''CREATE TABLE IF NOT EXISTS instructors (
                id INTEGER PRIMARY KEY AUTOINCREMENT,
                name TEXT,
                password TEXT
                )''')
 conn.commit()
 
-cursor.execute('''CREATE TABLE IF NOT EXISTS question (
+cursor.execute('''CREATE TABLE IF NOT EXISTS assignments (
                id INTEGER PRIMARY KEY AUTOINCREMENT,
                creator_id INTEGER,
+               name TEXT,
                type TEXT
                )''')
 
-cursor.execute('''CREATE TABLE IF NOT EXISTS exercises (
+cursor.execute('''CREATE TABLE IF NOT EXISTS labs (
                id INTEGER PRIMARY KEY,
-               name TEXT,
-               instructions TEXT,
+               directions TEXT,
                test_cases_json TEXT
                )''')
 conn.commit()
 
 cursor.execute('''CREATE TABLE IF NOT EXISTS quizzes (
                id INTEGER PRIMARY KEY,
-               name TEXT,
                questions_json TEXT
                )''')
 conn.commit()
